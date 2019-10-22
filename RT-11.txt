@@ -1,0 +1,50 @@
+enable
+configure terminal
+hostname RT-11
+banner motd "acesso apenas para pessoas autorizadas"
+enable secret SenhadaEnable
+security passwords min-length 8
+login block-for 240 attempts 7 within 600
+username Fabricio privilege 15 secret Untitled01
+username Fernando privilege 15 secret Untitled02
+username Fagner  privilege 15 secret Untitled03
+username Gabriel privilege 15 secret Untitled04
+username Higor privilege 15 secret Untitled05
+ip domain-name rede1.local
+crypto key generate rsa general-keys modulus 1024
+line console 0
+password SenhadaConsole
+login
+exec-timeout 5
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+service password-encryption
+interface gigabitethernet0/0
+no shutdown
+description CONEXAO COM SWITCH-CORE
+exit
+interface gigabitethernet 0/0.20
+encapsulation dot1q 20
+ip address 172.16.0.1 255.255.255.0
+description interface vlan 20
+exit
+interface gigabitethernet 0/0.10
+encapsulation dot1q 10
+ip address 172.16.1.1 255.255.255.128
+description interface vlan 10
+exit
+interface gigabitethernet0/0.100
+encapsulation dot1q 100
+ip address 172.16.1.129 255.255.255.240
+description dispositivo srv
+exit
+interface serial 0/0/0
+ip address 200.18.189.2 255.255.255.252
+no shutdown
+description rede wan1
+exit
+ip route 172.16.2.0 255.255.254.0 200.18.189.1 
+do wr

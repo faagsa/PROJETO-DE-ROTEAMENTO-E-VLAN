@@ -1,0 +1,66 @@
+enable 
+configure terminal
+hostname SW-22
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+enable secret SenhadaEnable
+username Fabricio privilege 15 secret Untitled01
+username Fernando privilege 15 secret Untitled02
+username Fagner  privilege 15 secret Untitled03
+username Gabriel privilege 15 secret Untitled04
+username Higor privilege 15 secret Untitled05
+ip domain-name rede2.local
+crypto key generate rsa general-keys modulus 1024
+line console 0
+password SenhadaConsole
+login
+exec-timeout 5
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+service password-encryption
+interface vlan 100
+ip address 172.16.2.186 255.255.255.224
+description INTERFACE DE GERENCIAMENTO
+no shutdown
+exit
+ip default-gateway 172.16.2.161
+vlan 10
+name rh
+exit
+interface fastEthernet 0/2
+switchport mode access
+switchport access vlan 10
+description REDE RH
+exit
+vlan 20
+name VOZ
+exit
+interface fastEthernet 0/4
+switchport mode access
+switchport access vlan 20
+description REDE VOZ
+exit
+vlan 30
+name ADM
+exit
+interface fastEthernet 0/6
+switchport mode access
+switchport access vlan 30
+description REDE ADM
+exit
+vlan 100
+exit
+interface gigabitethernet 0/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,99,100
+description CONEXAO COM SWITCH
+exit
+interface gigabitethernet 0/2
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,99,100
+description CONEXAO COM SWITCH
+do wr
